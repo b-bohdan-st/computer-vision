@@ -24,10 +24,8 @@ while True:
     mask2 = cv2.inRange(hsv, lower_red_2, upper_red_2)
     mask = cv2.bitwise_or(mask1, mask2)
 
-    is_detected = False
-
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
+    is_detected = False
     for cnt in contours:
         area = cv2.contourArea(cnt)
         if area > 1000:
@@ -37,16 +35,19 @@ while True:
                 cx = int(M["m10"] / M["m00"])
                 cy = int(M["m01"] / M["m00"])
                 cv2.circle(frame, (cx, cy), 5, rgb(255, 0, 0), 2)
-
                 points.append((cx, cy))
-            for i in range(1, len(points)):
-                cv2.rectangle(frame, (0,0), (frame.shape[1], frame.shape[0]), rgb(0, 255, 0), 2)
-                cv2.putText(frame, "Object detected", (frame.shape[1] - 150, frame.shape[0] - 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 2)
+            is_detected = True
+            #for i in range(1, len(points)):
             # cv2.line(frame, points[i - 1], points[i], rgb(255, 0, 0), 2)
-        else:
-            cv2.rectangle(frame, (0, 0), (frame.shape[1], frame.shape[0]), rgb(255, 0, 0), 2)
-            cv2.putText(frame, "Object not detected", (frame.shape[1] - 180, frame.shape[0] - 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 2)
+    if is_detected:
+        cv2.rectangle(frame, (0,0), (frame.shape[1], frame.shape[0]), rgb(0, 255, 0), 2)
+        cv2.putText(frame, "Object detected", (frame.shape[1] - 150, frame.shape[0] - 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 2)
+    else:
+        cv2.rectangle(frame, (0, 0), (frame.shape[1], frame.shape[0]), rgb(255, 0, 0), 2)
+        cv2.putText(frame, "Object not detected", (frame.shape[1] - 180, frame.shape[0] - 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 2)
+        is_detected = False
 
+    print(is_detected)
 
 
 
