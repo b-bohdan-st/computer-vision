@@ -32,7 +32,6 @@ BUTTON_SAVE_ZONES = [180, 10, 330, 40]
 selected_zone = None
 selected_point = None
 
-
 def get_next_save_number():
     files = [f for f in os.listdir(SAVES_DIR) if f.startswith("zones_") and f.endswith(".txt")]
     numbers = []
@@ -43,7 +42,6 @@ def get_next_save_number():
             pass
     return max(numbers) + 1 if numbers else 1
 
-
 def save_zones(zones):
     number = get_next_save_number()
     filename = f"zones_{number}.txt"
@@ -52,24 +50,20 @@ def save_zones(zones):
         f.write(str(zones))
     print(f"Zones saved to {path}")
 
-
 def load_zones_from_file(filename):
     path = os.path.join(SAVES_DIR, filename)
     with open(path, "r") as f:
         return ast.literal_eval(f.read())
 
-
 def is_inside_zone(x, y, polygon):
     pts = np.array(polygon, dtype=np.float32)
     return cv2.pointPolygonTest(pts, (float(x), float(y)), False) >= 0
-
 
 def get_stream_url(youtube_url):
     ydl_opts = {"format": "best[ext=mp4]"}
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(youtube_url, download=False)
         return info["url"]
-
 
 def main(source_type, source_value, zones_file, auto_save):
     global selected_point, selected_zone
@@ -265,3 +259,4 @@ if __name__ == "__main__":
 
 # https://www.youtube.com/live/rnXIjl_Rzy4
 # https://www.youtube.com/live/H0Z6faxNLCI
+
